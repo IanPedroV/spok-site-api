@@ -1,0 +1,21 @@
+{
+  "name": "nodejs-api-template",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "consign": "^0.1.6",
+    "cors": "^2.8.4",
+    "express": "^4.16.3",
+    "express-validator": "^5.2.0",
+    "googleapis": "^48.0.0",
+    "helmet": "^3.21.3",
+    "last-tweet": "0.0.2"
+  }
+}

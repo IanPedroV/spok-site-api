@@ -1,0 +1,7 @@
+/node_modules
+.env
+/logs
+.vscode
+/.idea/workspace.xml
+/.idea/usage.statistics.xml
+/.idea/tasks.xml
