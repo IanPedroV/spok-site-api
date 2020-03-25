@@ -3,24 +3,33 @@ const { google } = require('googleapis');
 const app = require('./config/custom-express')();
 const puppeteer = require('puppeteer');
 const resolve = require('path').resolve
-let VIDEOS_TIME_STAMP
-let INSTAGRAM_TIME_STAMP
+let videosTimeStamp
+let lastPostTimeStamp
+let lastPost
+let videos
 
 app.listen(9000, async () => {
+    await updateVideos()
+    await updateLastPost()
     console.log('Servidor rodando na porta 9000.');
+    console.log('a')
 })
 
 app.get('/videos', async function (request, response) {
-    const videos = await getLastYoutubeVideos()
+    await updateVideos()
     response.status(200).send(videos)
 })
 
 app.get('/instagram', async function (request, response) {
-    const lastPost = await getLastInstagramPost()
+    await updateLastPost()
     response.status(200).sendFile(lastPost)
 })
 
 async function getLastYoutubeVideos() {
+    if (videosTimeStamp && diffInDays(videosTimeStamp) === 0) {
+        return videos
+    }
+
     const globalPlaylist = 'UUx2tsANnhacjiqisNmPnl-Q'
     let playlistItemsResponse = await google.youtube('v3').playlistItems.list({
         part: 'snippet',
@@ -37,11 +46,16 @@ async function getLastYoutubeVideos() {
         }
         return video;
     });
-
+    videosTimeStamp = new Date()
+    console.log(playlistItemsResponse)
     return playlistItemsResponse
 }
 
 async function getLastInstagramPost() {
+    if (lastPostTimeStamp && diffInDays(lastPostTimeStamp) === 0) {
+        return lastPost
+    }
+
     const imageName = 'lastpost.png'
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
@@ -50,5 +64,22 @@ async function getLastInstagramPost() {
     await page.waitFor(2000)
     await page.screenshot({ 'path': imageName, 'clip': { 'x': 40, 'y': 520, 'width': 380, 'height': 380 } });
     await page.close()
+    lastPostTimeStamp = new Date()
+    console.log(resolve(imageName))
     return resolve(imageName)
+
+}
+
+async function updateVideos() {
+    videos = await getLastYoutubeVideos()
+}
+
+async function updateLastPost() {
+    lastPost = await getLastInstagramPost()
+}
+
+function diffInDays(dt2) {
+    const dt1 = new Date()
+    return Math.floor((Date.UTC(dt2.getFullYear(), dt2.getMonth(), dt2.getDate()) -
+        Date.UTC(dt1.getFullYear(), dt1.getMonth(), dt1.getDate())) / (1000 * 60 * 60 * 24));
 }

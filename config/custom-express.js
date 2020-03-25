@@ -12,7 +12,6 @@ module.exports = function () {
     app.use(cors());
 
     consign()
-        .include('controllers')
         .into(app);
     return app;
 };
