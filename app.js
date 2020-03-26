@@ -12,7 +12,6 @@ app.listen(9000, async () => {
     await updateVideos()
     await updateLastPost()
     console.log('Servidor rodando na porta 9000.');
-    console.log('a')
 })
 
 app.get('/videos', async function (request, response) {
@@ -38,12 +37,13 @@ async function getLastYoutubeVideos() {
     })
 
     playlistItemsResponse = playlistItemsResponse.data.items.map((item, index) => {
+        console.log(item.snippet.thumbnails)
         let video = {
             isLastVideo: index === 0,
             title: item.snippet.title,
             url: 'https://www.youtube.com/watch?v=' + item.snippet.resourceId.videoId,
             id: item.snippet.resourceId.videoId,
-            thumb: item.snippet.thumbnails.maxres
+            thumb: item.snippet.thumbnails.maxres.url
         }
         return video;
     });
