@@ -43,7 +43,7 @@ async function getLastYoutubeVideos() {
             title: item.snippet.title,
             url: 'https://www.youtube.com/watch?v=' + item.snippet.resourceId.videoId,
             id: item.snippet.resourceId.videoId,
-            thumb: item.snippet.thumbnails.high.url
+            thumb: item.snippet.thumbnails.maxres
         }
         return video;
     });
