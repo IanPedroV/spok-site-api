@@ -64,7 +64,7 @@ async function getLastInstagramPost() {
     await page.click('#react-root > section > main > div > div._2z6nI > article > div:nth-child(1) > div > div:nth-child(1) > div:nth-child(1)')
     await page.waitFor(2000)
     await page.screenshot({ 'path': imageName, 'clip': { 'x': 40, 'y': 520, 'width': 375, 'height': 375 } });
-    await page.close()
+    browser.close();
     lastPostTimeStamp = new Date()
     console.log(resolve(imageName))
     return resolve(imageName)
