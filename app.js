@@ -8,7 +8,7 @@ let lastPostTimeStamp
 let lastPost
 let videos
 
-app.listen(9000, async () => {
+app.listen(9000, async function () {
     await updateVideos()
     await updateLastPost()
     console.log('Servidor rodando na porta 9000.');
@@ -37,7 +37,6 @@ async function getLastYoutubeVideos() {
     })
 
     playlistItemsResponse = playlistItemsResponse.data.items.map((item, index) => {
-        console.log(item.snippet.thumbnails)
         let video = {
             isLastVideo: index === 0,
             title: item.snippet.title,
@@ -48,7 +47,6 @@ async function getLastYoutubeVideos() {
         return video;
     });
     videosTimeStamp = new Date()
-    console.log(playlistItemsResponse)
     return playlistItemsResponse
 }
 
@@ -58,7 +56,10 @@ async function getLastInstagramPost() {
     }
 
     const imageName = 'lastpost.png'
-    const browser = await puppeteer.launch();
+    const browser = await puppeteer.launch({
+   headless: true,
+   args: ['--no-sandbox']
+})
     const page = await browser.newPage();
     await page.goto('https://www.instagram.com/spoktc/');
     await page.click('#react-root > section > main > div > div._2z6nI > article > div:nth-child(1) > div > div:nth-child(1) > div:nth-child(1)')
@@ -66,7 +67,6 @@ async function getLastInstagramPost() {
     await page.screenshot({ 'path': imageName, 'clip': { 'x': 40, 'y': 520, 'width': 375, 'height': 375 } });
     browser.close();
     lastPostTimeStamp = new Date()
-    console.log(resolve(imageName))
     return resolve(imageName)
 
 }
